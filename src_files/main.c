@@ -1,7 +1,10 @@
+#define _DEFAULT_SOURCE
+#include <ctype.h>
 #include <iso646.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 #include <time.h>
 #include <raylib.h>
 #include <unistd.h>
@@ -17,7 +20,8 @@ int font_size(int scale) {
 typedef enum {
     START,
     PLAY,
-    FIN
+    FIN,
+    RESULT
 } Game_Stage;
 
 void start_game(Game_Stage *current_stage) {
@@ -60,14 +64,57 @@ int play(Game_Stage *current_stage) {
     return total;
 }
 
-void finish_game(Game_Stage *current_stage, int total) {
+bool finish_game(Game_Stage *current_stage, int total,char total_string[100], int * total_string_len) {
         BeginDrawing();
         ClearBackground(BEIGE);
         char* ending_text = "Please type in the total: ";
-        int text_size = MeasureText(ending_text, font_size(20));
-        DrawText(ending_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(20), BLACK);
-        EndDrawing();
+        int text_size = MeasureText(ending_text, font_size(5));
+        DrawText(ending_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(5), BLACK);
+        
 
+        char cur_char = GetCharPressed();
+        if (isdigit(cur_char) || cur_char == '-') {
+            total_string[*total_string_len - 1] = cur_char;
+            total_string[*total_string_len] = '\0';
+            *total_string_len += 1;
+            }
+        if (IsKeyPressed(KEY_DELETE) || IsKeyPressed(KEY_BACKSPACE)) {
+            for (int j = 0; j<*total_string_len - 1; j++) {
+                total_string[j] = total_string[j+1];
+                total_string[*total_string_len] = '\0';
+            }
+            *total_string_len -= 1;
+        };
+
+        int text_size_string = MeasureText(total_string, font_size(5));
+        DrawText(total_string, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            *current_stage = RESULT;
+            return (atoi(total_string) == total);
+        };
+        EndDrawing();
+        return false;
+
+}
+
+void result(Game_Stage *current_stage, int total, bool win) {
+    if (win) {
+        char* winning_text = "You won!!";
+        int text_size = MeasureText(winning_text, font_size(5));
+        DrawText(winning_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(5), GREEN);
+    }
+    else {
+        char winning_text[100];
+        sprintf(winning_text,"Wrong, the answer was %d",total);
+        int text_size = MeasureText(winning_text, font_size(5));
+        DrawText(winning_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(5), RED);
+    }
+    int text_size_string = MeasureText("Press enter to replay", font_size(5));
+    DrawText("Press enter to replay", (GetScreenWidth() - text_size_string) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
+    if (IsKeyPressed(KEY_ENTER)) {
+        *current_stage = PLAY;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -77,6 +124,10 @@ int main(int argc, char *argv[])
     int init_height = 700;
     Game_Stage current_stage = START;
     int total;
+    char total_string[100]; 
+    total_string[0] = '\0';
+    int total_string_len = 1;
+    bool win;
 
     InitWindow(init_width, init_height,"numbers game");
 
@@ -86,7 +137,8 @@ int main(int argc, char *argv[])
         switch(current_stage) {
             case START: start_game(&current_stage); break;
             case PLAY: total = play(&current_stage); break;
-            case FIN: finish_game(&current_stage,total); break;
+            case FIN: win = finish_game(&current_stage,total,total_string,&total_string_len); break;
+            case RESULT: result(&current_stage,total,win); break;
             default: start_game(&current_stage); break;
         };
 
