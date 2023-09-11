@@ -133,6 +133,7 @@ int main()
     int total_string_len = 1;
     bool win;
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(init_width, init_height,"numbers game");
 
     SetTargetFPS(FPS);
