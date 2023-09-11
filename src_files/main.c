@@ -78,20 +78,21 @@ bool finish_game(Game_Stage *current_stage, int total,char total_string[100], in
             total_string[*total_string_len] = '\0';
             *total_string_len += 1;
             }
+
         if (IsKeyPressed(KEY_DELETE) || IsKeyPressed(KEY_BACKSPACE)) {
-            for (int j = 0; j<*total_string_len - 1; j++) {
-                total_string[j] = total_string[j+1];
-                total_string[*total_string_len] = '\0';
-            }
             *total_string_len -= 1;
+            total_string[*total_string_len - 1] = '\0';
         };
 
         int text_size_string = MeasureText(total_string, font_size(5));
         DrawText(total_string, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
 
         if (IsKeyPressed(KEY_ENTER)) {
+            bool win = (atoi(total_string) == total);
             *current_stage = RESULT;
-            return (atoi(total_string) == total);
+            *total_string_len = 1;
+            total_string[0] = '\0';
+            return win;
         };
         EndDrawing();
         return false;
@@ -99,6 +100,7 @@ bool finish_game(Game_Stage *current_stage, int total,char total_string[100], in
 }
 
 void result(Game_Stage *current_stage, int total, bool win) {
+    BeginDrawing();
     if (win) {
         char* winning_text = "You won!!";
         int text_size = MeasureText(winning_text, font_size(5));
@@ -112,6 +114,7 @@ void result(Game_Stage *current_stage, int total, bool win) {
     }
     int text_size_string = MeasureText("Press enter to replay", font_size(5));
     DrawText("Press enter to replay", (GetScreenWidth() - text_size_string) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
+    EndDrawing();
     if (IsKeyPressed(KEY_ENTER)) {
         *current_stage = PLAY;
     }
