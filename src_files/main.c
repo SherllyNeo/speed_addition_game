@@ -44,10 +44,18 @@ int play(Game_Stage *current_stage) {
         int text_size = MeasureText(random_number_text, font_size(20));
         BeginDrawing();
         ClearBackground(BEIGE);
+        EndDrawing();
+        usleep(100000);
+        BeginDrawing();
+        ClearBackground(BEIGE);
         DrawText(random_number_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(20), BLACK);
         EndDrawing();
         sleep(60 / BPM);
     }
+    BeginDrawing();
+    ClearBackground(BEIGE);
+    EndDrawing();
+
     *current_stage = FIN;
     return total;
 }
@@ -57,7 +65,7 @@ void finish_game(Game_Stage *current_stage, int total) {
         ClearBackground(BEIGE);
         char* ending_text = "Please type in the total: ";
         int text_size = MeasureText(ending_text, font_size(20));
-        DrawText(ending_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(5), BLACK);
+        DrawText(ending_text, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2, font_size(20), BLACK);
         EndDrawing();
 
 }
