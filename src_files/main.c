@@ -41,7 +41,8 @@ int play(Game_Stage *current_stage) {
     int total = 0;
     for (int i = 0; i<AMOUNT_OF_NUMBERS; i++) {
         int random_number = rand() % 10;
-        random_number = rand() & 1 ? random_number : random_number * -1;
+        if (NEGATIVES) 
+            random_number = rand() & 1 ? random_number : random_number * -1;
         total += random_number;
         char random_number_text[50]; 
         sprintf(random_number_text,"%d",random_number);
