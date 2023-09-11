@@ -85,7 +85,7 @@ bool finish_game(Game_Stage *current_stage, int total,char total_string[100], in
         };
 
         int text_size_string = MeasureText(total_string, font_size(5));
-        DrawText(total_string, (GetScreenWidth() - text_size) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
+        DrawText(total_string, (GetScreenWidth() - text_size_string) / 2, GetScreenHeight() / 2 + font_size(5), font_size(5), BLACK);
 
         if (IsKeyPressed(KEY_ENTER)) {
             bool win = (atoi(total_string) == total);
@@ -120,7 +120,7 @@ void result(Game_Stage *current_stage, int total, bool win) {
     }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     srand(time(NULL));
     int init_width = 700;
