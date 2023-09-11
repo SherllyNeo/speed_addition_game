@@ -40,7 +40,9 @@ void start_game(Game_Stage *current_stage) {
 int play(Game_Stage *current_stage) {
     int total = 0;
     for (int i = 0; i<AMOUNT_OF_NUMBERS; i++) {
-        int random_number = rand() % 10;
+
+        int random_number = rand() % (10*AMOUNT_OF_DIGITS);
+
         if (NEGATIVES) 
             random_number = rand() & 1 ? random_number : random_number * -1;
         total += random_number;
