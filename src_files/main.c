@@ -24,6 +24,10 @@ typedef enum {
     RESULT
 } Game_Stage;
 
+int random_in_range(int low, int high) {
+    return low + (rand() % (high-low));
+}
+
 void start_game(Game_Stage *current_stage) {
     BeginDrawing();
     ClearBackground(BEIGE);
@@ -41,10 +45,15 @@ int play(Game_Stage *current_stage) {
     int total = 0;
     for (int i = 0; i<AMOUNT_OF_NUMBERS; i++) {
 
-        int random_number = rand() % (10*AMOUNT_OF_DIGITS);
+        int random_number = 0;
 
-        if (NEGATIVES) 
-            random_number = rand() & 1 ? random_number : random_number * -1;
+        if (NEGATIVES) {
+            random_number = random_in_range((total < 0) ? (-10*AMOUNT_OF_DIGITS + total) : (-10*AMOUNT_OF_DIGITS), (total > 0) ? (10*AMOUNT_OF_DIGITS - total) : (10*AMOUNT_OF_DIGITS) );
+        }
+        else {
+            random_number = random_in_range(0, 10*AMOUNT_OF_DIGITS);
+        }
+
         total += random_number;
         char random_number_text[50]; 
         sprintf(random_number_text,"%d",random_number);
