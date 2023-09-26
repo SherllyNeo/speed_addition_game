@@ -48,7 +48,7 @@ int play(Game_Stage *current_stage) {
         int random_number = 0;
 
         if (NEGATIVES) {
-            random_number = random_in_range((total < 0) ? (-10*AMOUNT_OF_DIGITS + total) : (-10*AMOUNT_OF_DIGITS), (total > 0) ? (10*AMOUNT_OF_DIGITS - total) : (10*AMOUNT_OF_DIGITS) );
+            random_number = random_in_range(-total, 10*AMOUNT_OF_DIGITS - total);
         }
         else {
             random_number = random_in_range(0, 10*AMOUNT_OF_DIGITS);
