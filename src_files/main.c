@@ -45,6 +45,10 @@ int play(Game_Stage *current_stage) {
     int total = 0;
     for (int i = 0; i<AMOUNT_OF_NUMBERS; i++) {
 
+        if (WindowShouldClose()) {
+            *current_stage = FIN;
+            return total;
+        }
         int random_number = 0;
 
         if (NEGATIVES) {
